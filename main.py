@@ -28,153 +28,158 @@ container.grid_columnconfigure(0, weight=1)
 #endregion
 
 # region - Rozdzielenie podstron
-page1 = tk.Frame(container, bg=var.COLOR)   #strona glowna
-page2 = tk.Frame(container, bg=var.COLOR)   #strona szyfrowania  
-page3 = tk.Frame(container, bg=var.COLOR)   #strona odszyfrowywania
+main_page = tk.Frame(container, bg=var.COLOR)   #strona glowna
+encrypt_page = tk.Frame(container, bg=var.COLOR)   #strona szyfrowania
+decrypt_page = tk.Frame(container, bg=var.COLOR)   #strona odszyfrowywania
 
-for box in (page1, page2, page3):
+for box in (main_page, encrypt_page, decrypt_page):
     box.grid(row=0, column=0, sticky="nsew")
 #endregion
 
 # region ==== Strona 1 ======
-# Naglowek
-header1 = cls.Header(page1, "𝖥𝗂𝗅𝖾 𝖤𝗇𝖼𝗋𝗒𝗉𝗍𝗈𝗋")
-header1.pack(pady=10)
+def render_main_page():
+    # Naglowek
+    header = cls.Header(main_page, "𝖥𝗂𝗅𝖾 𝖤𝗇𝖼𝗋𝗒𝗉𝗍𝗈𝗋")
+    header.pack(pady=10)
 
-frame1 = tk.Frame(page1, bg='white', width=8*var.COLUMN_WIDTH, height=10*var.ROW_HEIGHT)
-frame1.grid_propagate(False)
-frame1.pack(pady=10)
+    frame = tk.Frame(main_page, bg='white', width=8 * var.COLUMN_WIDTH, height=10 * var.ROW_HEIGHT)
+    frame.grid_propagate(False)
+    frame.pack(pady=10)
 
-for i in range(2):
-    frame1.columnconfigure(i, weight=1)
-    frame1.rowconfigure(i, weight=1)
+    for i in range(2):
+        frame.columnconfigure(i, weight=1)
+        frame.rowconfigure(i, weight=1)
 
-#Przycisk szyfrowania
-enc_button = cls.Custom_Button("Encrypt file", frame1, lambda: fc.show_frame(page2))
-enc_button.grid(row=0, column=0, sticky="s", pady=30)
+    #Przycisk szyfrowania
+    enc_button = cls.Custom_Button("Encrypt file", frame, lambda: fc.show_frame(encrypt_page))
+    enc_button.grid(row=0, column=0, sticky="s", pady=30)
 
-#Przycisk szyfrowania
-dec_button = cls.Custom_Button("Decrypt file", frame1, lambda: fc.show_frame(page3))
-dec_button.grid(row=1, column=0, sticky="n", pady=30)
+    #Przycisk szyfrowania
+    dec_button = cls.Custom_Button("Decrypt file", frame, lambda: fc.show_frame(decrypt_page))
+    dec_button.grid(row=1, column=0, sticky="n", pady=30)
 
-#Obraz
-image = Image.open(fc.resource_path(var.img1))
-image = image.resize((3*var.COLUMN_WIDTH, 6*var.ROW_HEIGHT))
-image_object = ImageTk.PhotoImage(image)
+    #Obraz
+    logo_image = Image.open(fc.resource_path(var.logo_icon))
+    logo_image = logo_image.resize((3 * var.COLUMN_WIDTH, 6 * var.ROW_HEIGHT))
+    image_object = ImageTk.PhotoImage(logo_image)
 
-label_img = tk.Label(frame1, image=image_object, bg="white")
-label_img.image = image_object
-label_img.grid(row=0, column=1, columnspan=2, rowspan=2, sticky="ew")
+    image_label = tk.Label(frame, image=image_object, bg="white")
+    image_label.image = image_object
+    image_label.grid(row=0, column=1, columnspan=2, rowspan=2, sticky="ew")
 
-#Przycisk EXIT
-exit_button = cls.Back_Button("Exit", page1, lambda: fc.exit(root))
-exit_button.pack(pady=15)
-#endregion
+    #Przycisk EXIT
+    exit_button = cls.Back_Button("Exit", main_page, lambda: fc.exit(root))
+    exit_button.pack(pady=15)
+    #endregion
 
 # region ==== Strona 2 ======
-#====== Header ======
-header2 = cls.Header(page2, "​𝐄𝐧𝐜𝐫𝐲𝐩𝐭𝐢𝐨𝐧")
-header2.pack(pady=10)
+def render_encrypt_page():
+    #====== Header ======
+    header = cls.Header(encrypt_page, "​𝐄𝐧𝐜𝐫𝐲𝐩𝐭𝐢𝐨𝐧")
+    header.pack(pady=10)
 
-#====== Bialy kontener ======
-frame2 = tk.Frame(page2, bg='white', width=8*var.COLUMN_WIDTH, height=10*var.ROW_HEIGHT)
-frame2.grid_propagate(False)
-frame2.pack(pady=10)
+    #====== Bialy kontener ======
+    frame = tk.Frame(encrypt_page, bg='white', width=8 * var.COLUMN_WIDTH, height=10 * var.ROW_HEIGHT)
+    frame.grid_propagate(False)
+    frame.pack(pady=10)
 
-for i in range(2):
-    frame2.columnconfigure(i, weight=1)
+    for i in range(2):
+        frame.columnconfigure(i, weight=1)
 
-choose_file_btt = cls.Action_Button("File to encrypt", frame2, lambda: fc.find_file(1))
-choose_file_label = cls.Path_label(frame2, var.PATH_1_var)
+    choose_file_btt = cls.Action_Button("File to encrypt", frame, lambda: fc.find_file(1))
+    choose_file_label = cls.Path_label(frame, var.ENCRYPT_FILE_PATH)
 
-enc_file_btt = cls.Action_Button("Encryption key file", frame2, lambda: fc.find_file(2))
-enc_file_label = cls.Path_label(frame2, var.PATH_2_var)
+    enc_file_btt = cls.Action_Button("Encryption key file", frame, lambda: fc.find_file(2))
+    enc_file_label = cls.Path_label(frame, var.ENCRYPTION_KEY_PATH)
 
-generate_key_btt = cls.Action_Button("Generate encryption key", frame2, lambda: fc.generate_key())
-key_label = cls.Key_Label(frame2, var.ENCRYPTION_KEY)
-use_btt = cls.Action_Button("Use", frame2, lambda: fc.use_file())
-key_file_label = cls.Path_label(frame2, var.PATH_3_var)
+    generate_key_btt = cls.Action_Button("Generate encryption key", frame, lambda: fc.generate_key())
+    key_label = cls.Key_Label(frame, var.ENCRYPTION_KEY)
+    use_btt = cls.Action_Button("Use", frame, lambda: fc.use_file())
+    key_file_label = cls.Path_label(frame, var.NEW_ENC_KEY_PATH)
 
-encryption_btt = cls.Custom_Button("Encrypt", frame2, lambda: fc.encrypt())
+    encryption_btt = cls.Custom_Button("Encrypt", frame, lambda: fc.encrypt())
 
-#----------------- Strefa pakowania----------------
-choose_file_btt.grid(column=0, row=0, sticky="nw", pady=(30,5), padx=30)
-choose_file_label.grid(column=0, row=1, sticky="nw", padx=30)
+    #----------------- Strefa pakowania----------------
+    choose_file_btt.grid(column=0, row=0, sticky="nw", pady=(30,5), padx=30)
+    choose_file_label.grid(column=0, row=1, sticky="nw", padx=30)
 
-enc_file_btt.grid(column=0, row=2, sticky="nw", pady=(30,5), padx=30)
-enc_file_label.grid(column=0, row=3, sticky="nw", padx=30)
+    enc_file_btt.grid(column=0, row=2, sticky="nw", pady=(30,5), padx=30)
+    enc_file_label.grid(column=0, row=3, sticky="nw", padx=30)
 
-generate_key_btt.grid(column=0, row=4, sticky="nw", pady=(30,5), padx=30)
-key_label.grid(column=0, row=5, sticky="nw", padx=30, ipady=3)
-use_btt.grid(column=0, row=6, sticky="w", padx=30, pady=3)
-key_file_label.grid(column=0, row=7, sticky="w", padx=30)
+    generate_key_btt.grid(column=0, row=4, sticky="nw", pady=(30,5), padx=30)
+    key_label.grid(column=0, row=5, sticky="nw", padx=30, ipady=3)
+    use_btt.grid(column=0, row=6, sticky="w", padx=30, pady=3)
+    key_file_label.grid(column=0, row=7, sticky="w", padx=30)
 
-encryption_btt.grid(column=0, row=8, sticky="sw", padx=30, pady=(30, 0))
+    encryption_btt.grid(column=0, row=8, sticky="sw", padx=30, pady=(30, 0))
 
+    #---------------- Obraz ----------------
+    padlock_image = Image.open(fc.resource_path(var.closed_padlock_icon))
+    padlock_image = padlock_image.resize((3*var.COLUMN_WIDTH, 6*var.ROW_HEIGHT))
+    image_object = ImageTk.PhotoImage(padlock_image)
 
-#---------------- Obraz ----------------
-image2 = Image.open(fc.resource_path(var.img2))
-image2 = image2.resize((3*var.COLUMN_WIDTH, 6*var.ROW_HEIGHT))
-image_object2 = ImageTk.PhotoImage(image2)
+    image_label = tk.Label(frame, image=image_object, bg="white")
+    image_label.image = image_object
+    image_label.grid(row=0, column=1, rowspan=9, columnspan=1, sticky="nswe")
 
-label_img2 = tk.Label(frame2, image=image_object2, bg="white")
-label_img2.image = image_object2
-label_img2.grid(row=0, column=1, rowspan=9, columnspan=1, sticky="nswe")
-
-#====== BACK ======
-back_button2 = cls.Back_Button("Back", page2, lambda: fc.back(page1))
-back_button2.pack(pady=15)
-#endregion
+    #====== BACK ======
+    back_button = cls.Back_Button("Back", encrypt_page, lambda: fc.back(main_page))
+    back_button.pack(pady=15)
+    #endregion
 
 # region ==== Strona 3 ======
-header3 = cls.Header(page3, "𝗗𝗲𝗰𝗿𝘆𝗽𝘁𝗶𝗼𝗻")
-header3.pack(pady=10)
+def render_decrypt_page():
+    header = cls.Header(decrypt_page, "𝗗𝗲𝗰𝗿𝘆𝗽𝘁𝗶𝗼𝗻")
+    header.pack(pady=10)
 
-# ======== Bialy kontener =======
-frame3 = tk.Frame(page3, bg='white', width=8*var.COLUMN_WIDTH, height=10*var.ROW_HEIGHT)
-frame3.grid_propagate(False)
-frame3.pack(pady=10)
+    # ======== Bialy kontener =======
+    frame = tk.Frame(decrypt_page, bg='white', width=8 * var.COLUMN_WIDTH, height=10 * var.ROW_HEIGHT)
+    frame.grid_propagate(False)
+    frame.pack(pady=10)
 
-for i in range(2):
-    frame3.columnconfigure(i, weight=1)
-frame3.rowconfigure(5, weight=1)
+    for i in range(2):
+        frame.columnconfigure(i, weight=1)
+    frame.rowconfigure(5, weight=1)
 
-choose_file_btt_3 = cls.Action_Button("Encrypted file", frame3, lambda: fc.find_file(1))
-choose_file_label_3 = cls.Path_label(frame3, var.PATH_1_var)
+    choose_file_btt = cls.Action_Button("Encrypted file", frame, lambda: fc.find_file(1))
+    choose_file_label = cls.Path_label(frame, var.ENCRYPT_FILE_PATH)
 
-dec_file_btt = cls.Action_Button("Encryption key file", frame3, lambda: fc.find_file(2))
-dec_file_label = cls.Path_label(frame3, var.PATH_2_var)
+    dec_file_btt = cls.Action_Button("Encryption key file", frame, lambda: fc.find_file(2))
+    dec_file_label = cls.Path_label(frame, var.ENCRYPTION_KEY_PATH)
 
-key_entry = cls.Key_Entry(frame3)
+    key_entry = cls.Key_Entry(frame)
 
-decryption_btt = cls.Custom_Button("Decrypt", frame3, lambda: fc.decrypt())
+    decryption_btt = cls.Custom_Button("Decrypt", frame, lambda: fc.decrypt())
 
-#----------------- Strefa pakowania----------------
-choose_file_btt_3.grid(column=0, row=0, sticky="nw", pady=(30,5), padx=30)
-choose_file_label_3.grid(column=0, row=1, sticky="nw", padx=30)
+    #----------------- Strefa pakowania----------------
+    choose_file_btt.grid(column=0, row=0, sticky="nw", pady=(30,5), padx=30)
+    choose_file_label.grid(column=0, row=1, sticky="nw", padx=30)
 
-dec_file_btt.grid(column=0, row=2, sticky="nw", pady=(30,5), padx=30)
-dec_file_label.grid(column=0, row=3, sticky="nw", padx=30)
+    dec_file_btt.grid(column=0, row=2, sticky="nw", pady=(30,5), padx=30)
+    dec_file_label.grid(column=0, row=3, sticky="nw", padx=30)
 
-key_entry.grid(column=0, row=4, sticky="nw", pady=(30,5), padx=30, ipadx=5, ipady=3)
-fc.set_entry(key_entry)
+    key_entry.grid(column=0, row=4, sticky="nw", pady=(30,5), padx=30, ipadx=5, ipady=3)
+    fc.set_entry(key_entry)
 
-decryption_btt.grid(column=0, row=5, sticky="sw", padx=30, pady=(0, 20))
+    decryption_btt.grid(column=0, row=5, sticky="sw", padx=30, pady=(0, 20))
 
+    #---------------- Obraz ----------------
+    padlock_image = Image.open(fc.resource_path(var.open_padlock_icon))
+    padlock_image = padlock_image.resize((3*var.COLUMN_WIDTH, 6*var.ROW_HEIGHT))
+    image_object = ImageTk.PhotoImage(padlock_image)
 
-#---------------- Obraz ----------------
-image3 = Image.open(fc.resource_path(var.img3))
-image3 = image3.resize((3*var.COLUMN_WIDTH, 6*var.ROW_HEIGHT))
-image_object3 = ImageTk.PhotoImage(image3)
+    image_label = tk.Label(frame, image=image_object, bg="white")
+    image_label.image = image_object
+    image_label.grid(row=0, column=1, rowspan=6, columnspan=1, sticky="nswe")
 
-label_img3 = tk.Label(frame3, image=image_object3, bg="white")
-label_img3.image = image_object3
-label_img3.grid(row=0, column=1, rowspan=6, columnspan=1, sticky="nswe")
+    #====== BACK ======
+    back_button = cls.Back_Button("Back", decrypt_page, lambda: fc.back(main_page))
+    back_button.pack(pady=15)
+    #endregion
 
-#====== BACK ======
-back_button3 = cls.Back_Button("Back", page3, lambda: fc.back(page1))
-back_button3.pack(pady=15)
-#endregion
+render_main_page()
+render_encrypt_page()
+render_decrypt_page()
 
-fc.show_frame(page1)
+fc.show_frame(main_page)
 root.mainloop()
