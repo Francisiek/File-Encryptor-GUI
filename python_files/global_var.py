@@ -1,16 +1,17 @@
 import tkinter as tk
+import os
 
-PATH_1_var = None
-PATH_2_var = None
-PATH_3_var = None
+ENCRYPT_FILE_PATH = None
+ENCRYPTION_KEY_PATH = None
+NEW_ENC_KEY_PATH = None
 ENCRYPTION_KEY = None
 
 def init_variables(root):
-    global PATH_1_var, PATH_2_var, PATH_3_var, ENCRYPTION_KEY
+    global ENCRYPT_FILE_PATH, ENCRYPTION_KEY_PATH, NEW_ENC_KEY_PATH, ENCRYPTION_KEY
 
-    PATH_1_var = tk.StringVar(root, value="")
-    PATH_2_var = tk.StringVar(root, value="")
-    PATH_3_var = tk.StringVar(root, value="")
+    ENCRYPT_FILE_PATH = tk.StringVar(root, value="")
+    ENCRYPTION_KEY_PATH = tk.StringVar(root, value="")
+    NEW_ENC_KEY_PATH = tk.StringVar(root, value="")
     ENCRYPTION_KEY = tk.StringVar(root, value="")
 
 COLUMN_WIDTH = 100
@@ -19,6 +20,6 @@ ROW_HEIGHT = 50
 ROWS = 12
 COLOR = "#E9EEF5"
 
-img1 = "images\\icon.png"
-img2 = "images\\padlock.png"
-img3 = "images\\open.png"
+logo_icon = os.path.join("images", "icon.png")
+closed_padlock_icon = os.path.join("images", "padlock.png")
+open_padlock_icon = os.path.join("images", "open.png")
